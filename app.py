@@ -45,8 +45,6 @@ def index():
     )
 
     # precipation route
-
-
 @app.route("/api/v1.0/precipitation")
 def precipitation():
     # Find the most recent date in the data set.
@@ -59,6 +57,15 @@ def precipitation():
         Measurement.date >= earliest_date.isoformat()).all()
     result = {date: prcp for date, prcp in data}
     return jsonify(result)
+
+    # station route
+@app.route("/api/v1.0/stations")
+def stations():
+    # Design a query to calculate the total number stations in the dataset
+    result = session.query(Station.station).all()
+    return jsonify(result)
+
+
 
 if __name__ == '__main__':
     app.run()
