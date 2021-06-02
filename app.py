@@ -41,8 +41,10 @@ def index():
         f"<li>/api/v1.0/precipitation</li>"
         f"<li>/api/v1.0/stations</li>"
         f"<li>/api/v1.0/tobs</li>"
-        f"<li>/api/v1.0/temp/&lt;start&gt;/&ltend&gt</li>"
-        f"<ul> sample url: /api/v1.0/temp/2017-08-17 </ul>"
+        f"<li>/api/v1.0/temp/&lt;start&gt;/&ltend&gt<br/>"
+        f"<em>Sample urls:</em>"
+        f"<ul><li>/api/v1.0/temp/2017-08-17</li>"
+        f"<li>/api/v1.0/temp/2017-04-19/2017-08-17</li></ul></li>" 
         f"</ul></p>"
     )
 
