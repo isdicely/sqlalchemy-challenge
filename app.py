@@ -4,14 +4,14 @@ import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func
-from flask import Flask, jsonify
+from flask import Flask, json, jsonify
 
 
 # create engine to hawaii.sqlite
 engine = create_engine("sqlite:///hawaii.sqlite", echo=False)
 
 # reflect an existing database into a new model
-    # creates set of clases for each table in hawaii.sqlite
+# creates set of clases for each table in hawaii.sqlite
 Base = automap_base()
 
 # reflect the tables (defines classes that represent data in the table)
@@ -26,12 +26,9 @@ session = Session(engine)
 session
 
 
-
 # Set up routes with Flask
 app = Flask(__name__)
 # Index route
-
-
 
 
 @app.route("/")
@@ -52,11 +49,16 @@ def index():
 
 @app.route("/api/v1.0/precipitation")
 def precipitation():
-
-    return(
-
-    )
-
+    # Find the most recent date in the data set.
+    latest_date = dt.date.fromisoformat(
+        session.query(func.max(Measurement.date)).first()[0])
+    # Calculate the date one year from the last date in data set.
+    earliest_date = latest_date.replace(year=latest_date.year - 1)
+    # Perform a query to retrieve the data and precipitation scores
+    data = session.query(Measurement.date, Measurement.prcp).filter(
+        Measurement.date >= earliest_date.isoformat()).all()
+    result = {date: prcp for date, prcp in data}
+    return jsonify(result)
 
 if __name__ == '__main__':
     app.run()
