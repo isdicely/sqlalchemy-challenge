@@ -17,9 +17,21 @@ Base = automap_base()
 # reflect the tables (defines classes that represent data in the table)
 Base.prepare(engine, reflect=True)
 
+# Save references to each table
+Station = Base.classes.station
+Measurement = Base.classes.measurement
+
+# Create our session (link) from Python to the DB
+session = Session(engine)
+session
+
+
+
 # Set up routes with Flask
 app = Flask(__name__)
 # Index route
+
+
 
 
 @app.route("/")
