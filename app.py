@@ -28,6 +28,7 @@ session
 
 # Set up routes with Flask
 app = Flask(__name__)
+
 # Index route
 
 
@@ -45,6 +46,8 @@ def index():
     )
 
     # precipation route
+
+
 @app.route("/api/v1.0/precipitation")
 def precipitation():
     # Find the most recent date in the data set.
@@ -59,13 +62,34 @@ def precipitation():
     return jsonify(result)
 
     # station route
+
+
 @app.route("/api/v1.0/stations")
 def stations():
     # Design a query to calculate the total number stations in the dataset
     result = session.query(Station.station).all()
     return jsonify(result)
 
+    # temperature observation route
 
+
+@app.route("/api/v1.0/tobs")
+def tobs():
+    # Find the most recent date in the data set.
+    latest_date = dt.date.fromisoformat(
+        session.query(func.max(Measurement.date)).first()[0])
+    # Calculate the date one year from the last date in data set.
+    earliest_date = latest_date.replace(year=latest_date.year - 1)
+    # Design a query to find the most active stations (i.e. what stations have the most rows?)
+        # List the stations and the counts in descending order.
+    station_counts = session.query(Measurement.station, func.count(Measurement.station)).group_by(
+        Measurement.station).order_by(func.count(Measurement.station).desc()).all()
+    # Using the most active station id
+        # Query the last 12 months of temperature observation data for this station and plot the results as a histogram
+    temps_results = session.query(Measurement.date, Measurement.tobs).filter(Measurement.station == station_counts[0][0]).filter(
+        Measurement.date >= earliest_date).all()
+    result = {date: tobs for date, tobs in temps_results}
+    return jsonify(result)
 
 if __name__ == '__main__':
     app.run()
